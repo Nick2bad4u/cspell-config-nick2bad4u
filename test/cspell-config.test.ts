@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,7 +19,8 @@ const cspellCliPath = fileURLToPath(
 );
 
 beforeAll(async () => {
-    fixture.root = await mkdtemp(path.join(tmpdir(), "cspell-config-"));
+    const tempRoot = await mkdtemp(path.join(tmpdir(), "cspell-config-"));
+    fixture.root = await realpath(tempRoot);
 });
 
 afterAll(async () => {
